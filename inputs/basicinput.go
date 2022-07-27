@@ -1,14 +1,14 @@
 package inputs
 
 import (
-	"github.com/hculpan/gonand/wires"
+	"github.com/hculpan/gonand/common"
 )
 
 type BasicInput struct {
-	wire *wires.Wire
+	wire common.Output
 }
 
-func NewBasicInput(wire *wires.Wire) *BasicInput {
+func NewBasicInput(wire common.Output) *BasicInput {
 	return &BasicInput{
 		wire: wire,
 	}

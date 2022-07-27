@@ -2,18 +2,22 @@ package chips
 
 import (
 	"fmt"
+
+	"github.com/hculpan/gonand/common"
 )
 
 type Not struct {
 	input       bool
-	output      bool
+	value       bool
 	initialized bool
+	output      common.Output
 }
 
-func NewNot() *Not {
+func NewNot(o common.Output) *Not {
 	result := Not{
 		input:  false,
-		output: false,
+		value:  false,
+		output: o,
 	}
 
 	result.Reset()
@@ -31,13 +35,14 @@ func (n *Not) Ready() bool {
 }
 
 func (n *Not) Result() bool {
-	return n.output
+	return n.value
 }
 
 func (n *Not) Eval() bool {
-	n.output = !n.input
+	n.value = !n.input
+	n.output.SetInput(n.value)
 	n.Reset()
-	return n.output
+	return n.value
 }
 
 func (n *Not) SetInput(input string, value bool) error {
@@ -51,4 +56,8 @@ func (n *Not) SetInput(input string, value bool) error {
 	n.Reset()
 
 	return nil
+}
+
+func (n *Not) SetOutput(o common.Output) {
+	n.output = o
 }

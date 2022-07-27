@@ -2,17 +2,21 @@ package chips
 
 import (
 	"fmt"
+
+	"github.com/hculpan/gonand/common"
 )
 
 type And struct {
-	inputs map[string]InputValue
-	output bool
+	inputs map[string]common.InputValue
+	value  bool
+	output common.Output
 }
 
-func NewAnd() *And {
+func NewAnd(output common.Output) *And {
 	result := And{
-		inputs: make(map[string]InputValue),
-		output: false,
+		inputs: make(map[string]common.InputValue),
+		value:  false,
+		output: output,
 	}
 
 	result.Reset()
@@ -21,8 +25,8 @@ func NewAnd() *And {
 }
 
 func (a *And) Reset() {
-	a.inputs["a"] = InputValue{Value: false, Initialized: false}
-	a.inputs["b"] = InputValue{Value: false, Initialized: false}
+	a.inputs["a"] = common.InputValue{Value: false, Initialized: false}
+	a.inputs["b"] = common.InputValue{Value: false, Initialized: false}
 }
 
 func (a *And) Ready() bool {
@@ -36,18 +40,19 @@ func (a *And) Ready() bool {
 }
 
 func (a *And) Result() bool {
-	return a.output
+	return a.value
 }
 
 func (a *And) Eval() bool {
-	a.output = a.inputs["a"].Value && a.inputs["b"].Value
+	a.value = a.inputs["a"].Value && a.inputs["b"].Value
+	a.output.SetInput(a.value)
 	a.Reset()
-	return a.output
+	return a.value
 }
 
 func (a *And) SetInput(input string, value bool) error {
 	if _, ok := a.inputs[input]; ok {
-		a.inputs[input] = InputValue{Value: value, Initialized: true}
+		a.inputs[input] = common.InputValue{Value: value, Initialized: true}
 	} else {
 		return fmt.Errorf("invalid input '%s'", input)
 	}
@@ -58,4 +63,8 @@ func (a *And) SetInput(input string, value bool) error {
 	}
 
 	return nil
+}
+
+func (a *And) SetOutput(o common.Output) {
+	a.output = o
 }

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/hculpan/gonand/chips"
-	"github.com/hculpan/gonand/wires"
+	"github.com/hculpan/gonand/outputs"
 )
 
 func TestOr(t *testing.T) {
@@ -24,9 +24,9 @@ func TestOr(t *testing.T) {
 }
 
 func testOrWithResult(aValue bool, bValue bool, expected bool) error {
-	or := chips.NewOr()
-	a := NewBasicInput(wires.NewSimpleWire("a", or))
-	b := NewBasicInput(wires.NewSimpleWire("b", or))
+	or := chips.NewOr(outputs.NewNullOutput())
+	a := NewBasicInput(outputs.NewSimpleWire("a", or))
+	b := NewBasicInput(outputs.NewSimpleWire("b", or))
 	a.SetInput(aValue)
 	b.SetInput(bValue)
 	if or.Result() != expected {

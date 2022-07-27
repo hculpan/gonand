@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/hculpan/gonand/chips"
-	"github.com/hculpan/gonand/wires"
+	"github.com/hculpan/gonand/outputs"
 )
 
 func TestNot(t *testing.T) {
@@ -18,8 +18,8 @@ func TestNot(t *testing.T) {
 }
 
 func testNotWithResult(inValue bool, expected bool) error {
-	not := chips.NewNot()
-	in := NewBasicInput(wires.NewSimpleWire("in", not))
+	not := chips.NewNot(outputs.NewNullOutput())
+	in := NewBasicInput(outputs.NewSimpleWire("in", not))
 	in.SetInput(inValue)
 	if not.Result() != expected {
 		return fmt.Errorf("expected '%t' result, got '%t'", expected, not.Result())

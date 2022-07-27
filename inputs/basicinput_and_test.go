@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/hculpan/gonand/chips"
-	"github.com/hculpan/gonand/wires"
+	"github.com/hculpan/gonand/outputs"
 )
 
 func TestAnd(t *testing.T) {
@@ -24,9 +24,9 @@ func TestAnd(t *testing.T) {
 }
 
 func testAndWithResult(aValue bool, bValue bool, expected bool) error {
-	and := chips.NewAnd()
-	a := NewBasicInput(wires.NewSimpleWire("a", and))
-	b := NewBasicInput(wires.NewSimpleWire("b", and))
+	and := chips.NewAnd(outputs.NewNullOutput())
+	a := NewBasicInput(outputs.NewSimpleWire("a", and))
+	b := NewBasicInput(outputs.NewSimpleWire("b", and))
 	a.SetInput(aValue)
 	b.SetInput(bValue)
 	if and.Result() != expected {

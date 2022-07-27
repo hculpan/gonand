@@ -2,17 +2,21 @@ package chips
 
 import (
 	"fmt"
+
+	"github.com/hculpan/gonand/common"
 )
 
 type Or struct {
-	inputs map[string]InputValue
-	output bool
+	inputs map[string]common.InputValue
+	value  bool
+	output common.Output
 }
 
-func NewOr() *Or {
+func NewOr(o common.Output) *Or {
 	result := Or{
-		inputs: make(map[string]InputValue),
-		output: false,
+		inputs: make(map[string]common.InputValue),
+		value:  false,
+		output: o,
 	}
 
 	result.Reset()
@@ -21,8 +25,8 @@ func NewOr() *Or {
 }
 
 func (o *Or) Reset() {
-	o.inputs["a"] = InputValue{Value: false, Initialized: false}
-	o.inputs["b"] = InputValue{Value: false, Initialized: false}
+	o.inputs["a"] = common.InputValue{Value: false, Initialized: false}
+	o.inputs["b"] = common.InputValue{Value: false, Initialized: false}
 }
 
 func (o *Or) Ready() bool {
@@ -36,18 +40,19 @@ func (o *Or) Ready() bool {
 }
 
 func (o *Or) Result() bool {
-	return o.output
+	return o.value
 }
 
 func (o *Or) Eval() bool {
-	o.output = o.inputs["a"].Value || o.inputs["b"].Value
+	o.value = o.inputs["a"].Value || o.inputs["b"].Value
+	o.output.SetInput(o.value)
 	o.Reset()
-	return o.output
+	return o.value
 }
 
 func (o *Or) SetInput(input string, value bool) error {
 	if _, ok := o.inputs[input]; ok {
-		o.inputs[input] = InputValue{Value: value, Initialized: true}
+		o.inputs[input] = common.InputValue{Value: value, Initialized: true}
 	} else {
 		return fmt.Errorf("invalid input '%s'", input)
 	}
@@ -58,4 +63,8 @@ func (o *Or) SetInput(input string, value bool) error {
 	}
 
 	return nil
+}
+
+func (o *Or) SetOutput(out common.Output) {
+	o.output = out
 }

@@ -1,17 +1,17 @@
-package wires
+package outputs
 
-import "github.com/hculpan/gonand/chips"
+import "github.com/hculpan/gonand/common"
 
 type WireDestination struct {
 	name string
-	chip chips.Chip
+	chip common.Chip
 }
 
 type Wire struct {
 	outputs []WireDestination
 }
 
-func NewWireDestination(name string, chip chips.Chip) *WireDestination {
+func NewWireDestination(name string, chip common.Chip) *WireDestination {
 	return &WireDestination{
 		name: name,
 		chip: chip,
@@ -24,7 +24,7 @@ func NewWire(outputs []WireDestination) *Wire {
 	}
 }
 
-func NewSimpleWire(outputName string, output chips.Chip) *Wire {
+func NewSimpleWire(outputName string, output common.Chip) *Wire {
 	return NewWire([]WireDestination{*NewWireDestination(outputName, output)})
 }
 
